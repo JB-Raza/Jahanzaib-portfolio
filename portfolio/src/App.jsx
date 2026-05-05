@@ -1,4 +1,5 @@
 import { MotionConfig } from 'framer-motion'
+import { Analytics } from '@vercel/analytics/react'
 
 import Navbar            from './components/layout/Navbar'
 import Footer            from './components/layout/Footer'
@@ -60,6 +61,9 @@ export default function App() {
       </main>
 
       <Footer />
+
+      {/* Vercel Analytics — zero-config visitor tracking, no cookies */}
+      <Analytics />
     </MotionConfig>
   )
 }
