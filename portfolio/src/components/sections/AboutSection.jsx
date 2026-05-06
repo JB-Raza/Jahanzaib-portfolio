@@ -51,7 +51,7 @@ export default function AboutSection() {
           <div className="relative flex-shrink-0">
             <div className="gradient-border rounded-2xl p-0.5 glow-card">
               <div className="w-48 h-48 sm:w-56 sm:h-56 rounded-2xl overflow-hidden bg-panel flex items-center justify-center">
-                {personal.avatar && personal.avatar !== '/images/avatar.jpg' ? (
+                {personal.avatar && personal.avatar !== '@/assets/avatar.png' ? (
                   <img
                     src={personal.avatar}
                     alt={personal.fullName}
