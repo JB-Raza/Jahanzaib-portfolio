@@ -11,7 +11,7 @@ export const portfolioData = {
     title: 'Jahanzaib — Software Engineer',
     description: 'Dedicated Software Engineer with 2+ years of experience in the MERN stack and Next.js ecosystem. Building high-performance web and mobile applications.',
     url: 'https://jahanzaib-raza.vercel.app',
-    ogImage: '/og-image.png',
+    ogImage: '/og_image.png',
   },
 
   // ── Personal Info ──────────────────────────────────────────────────────────
