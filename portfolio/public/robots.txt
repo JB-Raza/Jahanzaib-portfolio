@@ -1,0 +1,14 @@
+# robots.txt — https://jahanzaib-raza.vercel.app
+#
+# Rules for all crawlers (Google, Bing, etc.)
+# Allow everything — this is a public portfolio with no private pages.
+#
+# IMPORTANT: Do NOT disallow /assets/ on a Vite SPA.
+# Google's crawler fetches JS bundles from /assets/ to render the app.
+# Blocking /assets/ prevents Google from seeing any of your content.
+
+User-agent: *
+Allow: /
+
+# No sitemap.xml exists (static SPA). Remove this line if you add one later.
+# Sitemap: https://jahanzaib-raza.vercel.app/sitemap.xml

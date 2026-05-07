@@ -1,14 +1,15 @@
 /**
  * CursorFollower — premium split-cursor, desktop / fine-pointer only.
  *
- * Two layers:
- *  • Inner dot  — tight spring, disappears when hovering interactive elements.
- *  • Outer ring — loose spring (trails behind), expands + turns aurora on hover.
- *
- * All transforms go through Framer Motion's style prop so they compose cleanly
- * with `animate: { scale }` (no CSS-transform conflicts with Tailwind classes).
+ * Performance fixes vs original:
+ *  - Removed separate `mouseover` listener (fired on EVERY nested element,
+ *    causing hundreds of setState calls per second → jank).
+ *  - Hover detection now runs inside the single `mousemove` handler.
+ *  - `hoveringRef` guards setState so it only fires when the value CHANGES,
+ *    not on every pixel of movement.
+ *  - `visibleRef` similarly prevents re-renders after the first show.
  */
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { motion, useMotionValue, useSpring } from 'framer-motion'
 
 const isTouchDevice =
@@ -19,46 +20,61 @@ export default function CursorFollower() {
   const [visible,  setVisible]  = useState(false)
   const [hovering, setHovering] = useState(false)
 
+  /* Refs to guard against unnecessary setState calls */
+  const visibleRef  = useRef(false)
+  const hoveringRef = useRef(false)
+
   /* Raw cursor position */
   const rawX = useMotionValue(-300)
   const rawY = useMotionValue(-300)
 
-  /* Dot — tight spring (near-instant) */
+  /* Dot — near-instant, unchanged (already fast) */
   const dotLeft = useSpring(rawX, { stiffness: 2000, damping: 90, mass: 0.3 })
   const dotTop  = useSpring(rawY, { stiffness: 2000, damping: 90, mass: 0.3 })
 
-  /* Ring — loose spring (lags ~80 ms) */
-  const ringLeft = useSpring(rawX, { stiffness: 130, damping: 18, mass: 0.6 })
-  const ringTop  = useSpring(rawY, { stiffness: 130, damping: 18, mass: 0.6 })
+  /* Ring — ~20% faster: stiffness 130→160, mass 0.6→0.48, damping 18→16 */
+  const ringLeft = useSpring(rawX, { stiffness: 160, damping: 16, mass: 0.48 })
+  const ringTop  = useSpring(rawY, { stiffness: 160, damping: 16, mass: 0.48 })
 
   useEffect(() => {
     if (isTouchDevice) return
 
     const onMove = (e) => {
+      /* Update motion values — no re-render */
       rawX.set(e.clientX)
       rawY.set(e.clientY)
-      setVisible(true)
-    }
 
-    const onOver = (e) => {
+      /* Show cursor — only setState once */
+      if (!visibleRef.current) {
+        visibleRef.current = true
+        setVisible(true)
+      }
+
+      /* Hover detection — only setState when value CHANGES */
       const el = e.target
-      setHovering(
+      const isHovering =
         el.tagName === 'A'      ||
         el.tagName === 'BUTTON' ||
-        el.closest('a')      !== null ||
-        el.closest('button') !== null,
-      )
+        !!el.closest('a')      ||
+        !!el.closest('button')
+
+      if (isHovering !== hoveringRef.current) {
+        hoveringRef.current = isHovering
+        setHovering(isHovering)
+      }
     }
 
-    const onLeave = () => setVisible(false)
+    const onLeave = () => {
+      visibleRef.current = false
+      setVisible(false)
+    }
 
-    window.addEventListener('mousemove',   onMove,   { passive: true })
-    document.addEventListener('mouseover', onOver)
+    /* Single listener instead of two — cuts event overhead in half */
+    window.addEventListener('mousemove',    onMove,   { passive: true })
     document.addEventListener('mouseleave', onLeave)
 
     return () => {
-      window.removeEventListener('mousemove',   onMove)
-      document.removeEventListener('mouseover', onOver)
+      window.removeEventListener('mousemove',    onMove)
       document.removeEventListener('mouseleave', onLeave)
     }
   }, [])
@@ -67,15 +83,16 @@ export default function CursorFollower() {
 
   return (
     <>
-      {/* ── Inner dot ─────────────────────────────────────────────────── */}
+      {/* ── Inner dot ──────────────────────────────────────────────── */}
       <motion.div
-        className="fixed z-[9999] pointer-events-none w-2 h-2 rounded-full bg-accent"
+        className="fixed z-[9999] pointer-events-none w-2.5 h-2.5 rounded-full bg-accent"
         style={{
           left:       dotLeft,
           top:        dotTop,
           translateX: '-50%',
           translateY: '-50%',
           boxShadow:  '0 0 10px rgba(129,140,248,0.9)',
+          willChange: 'transform',
         }}
         animate={{
           opacity: visible && !hovering ? 1 : 0,
@@ -84,16 +101,17 @@ export default function CursorFollower() {
         transition={{ duration: 0.12 }}
       />
 
-      {/* ── Outer ring ────────────────────────────────────────────────── */}
+      {/* ── Outer ring ─────────────────────────────────────────────── */}
       <motion.div
         className="fixed z-[9999] pointer-events-none rounded-full border"
         style={{
-          left:            ringLeft,
-          top:             ringTop,
-          width:           36,
-          height:          36,
-          translateX:      '-50%',
-          translateY:      '-50%',
+          left:       ringLeft,
+          top:        ringTop,
+          width:      36,
+          height:     36,
+          translateX: '-50%',
+          translateY: '-50%',
+          willChange: 'transform',
         }}
         animate={{
           opacity:         visible ? 1 : 0,

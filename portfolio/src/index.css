@@ -140,6 +140,14 @@
     background-clip: text;
   }
 
+  /* GPU-promote elements that animate every frame.
+     Tells the browser to composite them on their own layer upfront. */
+  .animate-orb-a,
+  .animate-orb-b,
+  .animate-orb-c  { will-change: transform; }
+  .animate-badge-glow { will-change: box-shadow; }
+  .shimmer-text       { will-change: background-position; }
+
   /* Shimmer / animated gradient text */
   .shimmer-text {
     background: linear-gradient(
@@ -179,6 +187,17 @@
       linear-gradient(#111827, #111827) padding-box,
       linear-gradient(135deg, #818cf8, #22d3ee) border-box;
     border: 2px solid transparent;
+  }
+
+  /*
+   * content-visibility: auto — browser skips layout + paint for off-screen
+   * sections entirely. The `contain-intrinsic-size` estimate prevents scroll
+   * bar jumping while sections are skipped.
+   * This is the single highest-impact CSS performance change for a long page.
+   */
+  section[id] {
+    content-visibility: auto;
+    contain-intrinsic-size: 0 600px;
   }
 
   /* Subtle top-edge divider between alternating sections */
