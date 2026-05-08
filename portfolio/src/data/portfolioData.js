@@ -25,7 +25,7 @@ export const portfolioData = {
     bio: 'Dedicated Software Engineer with over two years of professional experience specializing in the MERN stack and Next.js ecosystem. Proven expertise in developing high-performance web and mobile applications using React, React Native, and Node.js. Highly skilled in architecting scalable server-side solutions with Express and MongoDB while maintaining a performance-centric development philosophy.',
     bioExtended: 'Deep understanding of the Next.js framework, including Server-Side Rendering (SSR) and Static Site Generation (SSG) for optimal SEO and load speeds. Committed to delivering superior User Experience (UX) through clean, optimized code and highly responsive UI design. Strong technical foundation in JavaScript and TypeScript, ensuring type-safe and maintainable codebases across full-stack environments.',
     avatar: '/avatar.png',
-    cvUrl: '/cv/jahanzaib-cv.pdf',     // TODO: Add your CV → public/cv/jahanzaib-cv.pdf
+    cvUrl: '/jahanzaib_cv.pdf',
 
     // Stats (shown in About section)
     yearsOfExperience: 2,

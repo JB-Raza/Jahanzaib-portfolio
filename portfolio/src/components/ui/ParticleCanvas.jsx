@@ -1,20 +1,3 @@
-/**
- * ParticleCanvas — lightweight Canvas 2D particle field.
- *
- * Replaces the Three.js nebula (~880 KB bundle) with zero dependencies.
- * Uses the browser-native Canvas 2D API and a single requestAnimationFrame
- * loop. On a mid-range device this costs ~0.3 ms per frame vs ~2–3 ms for
- * the WebGL equivalent.
- *
- * Features:
- *  - 55 particles coloured in accent / aurora / mid tones
- *  - Gentle autonomous drift (each particle has its own velocity)
- *  - Subtle mouse parallax (particles shift slightly toward cursor)
- *  - Wrap-around edges so particles never disappear
- *  - DPR-aware canvas so it stays crisp on retina screens
- *  - Full cleanup on unmount (no memory leaks)
- *  - Works on all screen sizes (including mobile)
- */
 import { useRef, useEffect } from 'react'
 
 /* Brand colours + two mid-tones for variety */

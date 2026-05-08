@@ -13,7 +13,7 @@ export default function HeroSection() {
   return (
     <section
       id="hero"
-      className="relative min-h-screen flex flex-col items-center justify-center bg-base pt-20 overflow-hidden"
+      className="relative min-h-screen flex flex-col items-center justify-center bg-base pt-20 pb-10 overflow-hidden"
     >
       {/* ── Canvas 2D particle field (replaces Three.js ~880 KB) ────── */}
       {/* Zero dependencies, ~0.3 ms/frame, works on all devices        */}

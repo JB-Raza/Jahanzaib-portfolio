@@ -22,10 +22,10 @@ export default function Footer() {
 
   return (
     <footer className="bg-base border-t border-rim">
-      <div className="max-w-6xl mx-auto px-5 sm:px-8 lg:px-10 py-14">
+      <div className="max-w-6xl mx-auto px-5 sm:px-8 lg:px-10 py-8">
 
         {/* Top row */}
-        <div className="flex flex-col md:flex-row items-center justify-between gap-8 mb-10">
+        <div className="flex flex-col md:flex-row items-center justify-between gap-8 mb-6">
 
           {/* Brand */}
           <div className="text-center md:text-left">
@@ -77,11 +77,8 @@ export default function Footer() {
         </div>
 
         {/* Divider + copyright */}
-        <div className="border-t border-rim pt-8 flex flex-col sm:flex-row items-center justify-between gap-3 text-slate-500 text-sm">
+        <div className="border-t border-rim pt-7 flex flex-col sm:flex-row items-center justify-center gap-3 text-slate-500 text-sm">
           <p>© {year} {personal.fullName}. All rights reserved.</p>
-          <p>
-            Crafted with <span className="text-accent">♥</span> using React & Tailwind CSS
-          </p>
         </div>
       </div>
     </footer>
